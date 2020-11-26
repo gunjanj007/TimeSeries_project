@@ -65,6 +65,11 @@ ggplot(top_df, aes(x=top_df$id,y = top_df$market_cap_usd, fill=id)) +geom_bar(st
   xlab("Leading CC")+ylab("USD")+theme_minimal()+ggtitle("Market Cap of Leading Cryptocurrency")
 #From the plot it can be noticed that Bitcoin is having very high market.
 
+ggplot(dfa, aes(x=dfa$id,y = dfa$market_cap_usd, fill=id)) +geom_bar(stat = "identity")+
+  xlab("Leading CC")+ylab("USD")+theme_minimal()+ggtitle("Market Cap of Leading Cryptocurrency")
+#From the plot it can be noticed that Bitcoin is having very high market.
+
+
 #Variation in prices
 dfa<-data.frame(currency=c("Bitcoin","Ethereum","Ripple"),change1h=c(0.14,0.14,0.19),change24h=c(0.09,-1.11,0.07),change7d=c(5.57,0.82,10.45))
 bar<-gvisColumnChart(dfa, xvar = "currency",yvar = c("change1h","change24h","change7d"),options=list(title = "% change of prices", legend = "top", width=1000, height=800))
@@ -79,11 +84,11 @@ ggplot(top_df, aes(x=top_df$id,y = top_df$X24h_volume_usd, fill=id)) +geom_bar(s
 
 #Ploting bitcoin_data
 #Bitcoin Closing Price and Opening Price
-ggplot(bitcoin_data, aes(bitcoin_data$Date, bitcoin_data$`Close**`)) + 
+ggplot(bitcoin_data, aes(bitcoin_data$Date, bitcoin_data$`Close`)) + 
   geom_line(color='blue') + scale_x_date("Year")+ ylim(0,20000) + ylab("Closing Price")+
   ggtitle("Bitcoin Closing Price")
 
-ggplot(bitcoin_data, aes(bitcoin_data$Date, bitcoin_data$`Open*`))+ 
+ggplot(bitcoin_data, aes(bitcoin_data$Date, bitcoin_data$`Open`))+ 
   geom_line(color='red') + scale_x_date("Year")+ ylim(0,15000) + ylab("Opening Price")+
   ggtitle("Bitcoin Opening Price")
 
