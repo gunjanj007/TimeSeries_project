@@ -1,122 +1,4 @@
-library("anytime")
-library("bsts")
-library("car")
-library("caret")
-library("forecast")
-library("keras")
-library("MCMCpack")
-library("smooth")
-library("tensorflow")
-library("tseries")
-library("TTR")
-library("ggplot2")
-library("dplyr")
-library("rvest")
-library("anytime")
-library("corrplot")
-library("coinmarketcapr")
-library("formatR")
-library("yaml")  
-library("googleVis")
-library("knitr")
-
-
-##########################################################################################################
-#Data Collection
-
-#scraping Bitcoin data
-url <- "https://coinmarketcap.com/currencies/bitcoin/historical-data/?
-start=20130428&end=20190205"
-webpage <- read_html(url)
-bitcoin_data <- webpage %>%
-  html_nodes("table") %>%
-  .[[3]] %>%
-  html_table(fill = TRUE)
-html_table()
-bitcoin_data <- bitcoin_data[[1]]
-
-head(bitcoin_data)
-summary(bitcoin_data)
-
-
-#scraping ethereum data
-url_2 <- "https://coinmarketcap.com/currencies/ethereum/historical-data/?start=20130428&end=20190205"
-ethereum_data <- url_2 %>%
-  html() %>%
-  html_nodes(xpath='//*[@id="historical-data"]/div/div[2]/table') %>%
-  html_table()
-ethereum_data <- ethereum_data[[1]]
-
-head(ethereum_data)
-summary(ethereum_data)
-
-bitcoin_data = read.csv('bitcoin.csv')
-ethereum_data = read.csv('ethereum.csv')
-
-colnames(bitcoin_data) = c("Date","Open","High","Low","Close","Volume","Market Cap")
-colnames(ethereum_data) = c("Date","Open","High","Low","Close","Volume","Market Cap")
-
-#about data
-#The Open, High, Low and Close columns in the data set signify the Opening, highest, lowest and 
-#Closing price of Bitcoin against the USD on that particular day. 
-#The volume refers to the volume of bitcoin transferred in the market on a particular day and 
-#Market Cap refers to the total amount of bitcoin on circulation which is to be capped at 21 million.
-
-
-##########################################################################################################
-#Data Cleaning for bitcoin
-
-#formating date in standard format from character
-bitcoin_data$Date <- as.Date(anytime(bitcoin_data$Date))
-head(bitcoin_data)
-
-#formating market cap as numeric from character by replacing ',' from the data
-bitcoin_data$'Market Cap' <- gsub(",","",bitcoin_data$'Market Cap')
-bitcoin_data$`Market Cap` <- as.numeric(bitcoin_data$`Market Cap`)
-
-#formating volume as numeric from character by replacing ',' from the data
-bitcoin_data$Volume <- gsub(",","",bitcoin_data$Volume)
-bitcoin_data$Volume <- as.numeric(bitcoin_data$Volume)
-
-bitcoin_data$Open <- gsub(",","",bitcoin_data$Open)
-bitcoin_data$Open <- as.numeric(bitcoin_data$Open)
-
-bitcoin_data$High <- gsub(",","",bitcoin_data$High)
-bitcoin_data$High <- as.numeric(bitcoin_data$High)
-
-bitcoin_data$Low <- gsub(",","",bitcoin_data$Low)
-bitcoin_data$Low <- as.numeric(bitcoin_data$Low)
-
-bitcoin_data$Close <- gsub(",","",bitcoin_data$Close)
-bitcoin_data$Close <- as.numeric(bitcoin_data$Close)
-
-head(bitcoin_data)
-
-ethereum_data$Date <- as.Date(anytime(ethereum_data$Date))
-head(ethereum_data)
-
-#formating market cap as numeric from character by replacing ',' from the data
-ethereum_data$'Market Cap' <- gsub(",","",ethereum_data$'Market Cap')
-ethereum_data$`Market Cap` <- as.numeric(ethereum_data$`Market Cap`)
-
-#formating volume as numeric from character by replacing ',' from the data
-ethereum_data$Volume <- gsub(",","",ethereum_data$Volume)
-ethereum_data$Volume <- as.numeric(ethereum_data$Volume)
-
-ethereum_data$Open <- gsub(",","",ethereum_data$Open)
-ethereum_data$Open <- as.numeric(ethereum_data$Open)
-
-ethereum_data$High <- gsub(",","",ethereum_data$High)
-ethereum_data$High <- as.numeric(ethereum_data$High)
-
-ethereum_data$Low <- gsub(",","",ethereum_data$Low)
-ethereum_data$Low <- as.numeric(ethereum_data$Low)
-
-ethereum_data$Close <- gsub(",","",ethereum_data$Close)
-ethereum_data$Close <- as.numeric(ethereum_data$Close)
-
-#calculating total number of NA values in each column
-colSums(is.na(bitcoin_data))
+source("bitcoinDatapreprocessing.R")
 
 
 #volume is consider one of the most important part for analysing trends in bitcoin market as it shows
@@ -208,13 +90,13 @@ ggplot(bitcoin_data, aes(bitcoin_data$Date, bitcoin_data$`Open*`))+
 #Boxplot and Hist of Closing Price
 breaks<-c(50,1000,3000,5000,10000,15000,20000)
 labels<-c("50-1000","1000-3000","3000-5000","5000-10000","10000-15000","15000-20000")
-bins <- cut(bitcoin_data$`Close**`,breaks, include.lowest = T,right = F,labels = labels)
+bins <- cut(bitcoin_data$`Close`,breaks, include.lowest = T,right = F,labels = labels)
 plot(bins,col=3, main="Bitcoin Closing Price", xlab="Prices", ylab="Frequency")
-boxplot(bitcoin_data$`Close**`,col=7, main="Boxplot of Bitcoin CP", xlab="Closing Price",ylab="Prices" )
+boxplot(bitcoin_data$`Close`,col=7, main="Boxplot of Bitcoin CP", xlab="Closing Price",ylab="Prices" )
 
 #Comparing bitcoin Opening and Closing price
-ggplot(bitcoin_data, aes(bitcoin_data$Date))+ geom_line(aes(y = bitcoin_data$`Open*`, colour="Open"))+ 
-  geom_line(aes(y = bitcoin_data$`Close**`, colour="Close"))+ scale_x_date("Year")+ ylim(0,20000) + ylab("Prices")+ 
+ggplot(bitcoin_data, aes(bitcoin_data$Date))+ geom_line(aes(y = bitcoin_data$`Open`, colour="Open"))+ 
+  geom_line(aes(y = bitcoin_data$`Close`, colour="Close"))+ scale_x_date("Year")+ ylim(0,20000) + ylab("Prices")+ 
   ggtitle("Comparison of Bitcoin Prices")
 
 #Comparison of Bitcoin Market Cap and Volume
@@ -238,10 +120,10 @@ bitcoinext<- bitcoin_data[c(1:1280),]
 View(bitcoinext)
 bit_et<-cbind(bitcoinext,ethereum_data)
 colnames(ethereum_data)[colnames(ethereum_data)=="Date"]<-"Et.Date"
-colnames(ethereum_data)[colnames(ethereum_data)=="Open*"]<-"Et.Open"
+colnames(ethereum_data)[colnames(ethereum_data)=="Open"]<-"Et.Open"
 colnames(ethereum_data)[colnames(ethereum_data)=="High"]<-"Et.High"
 colnames(ethereum_data)[colnames(ethereum_data)=="Low"]<-"Et.Low"
-colnames(ethereum_data)[colnames(ethereum_data)=="Close**"]<-"Et.Close"
+colnames(ethereum_data)[colnames(ethereum_data)=="Close"]<-"Et.Close"
 colnames(ethereum_data)[colnames(ethereum_data)=="Volume"]<-"Et.Volume"
 colnames(ethereum_data)[colnames(ethereum_data)=="Market Cap"]<-"Et.Market Cap"
 bit_et<-cbind(bitcoinext,ethereum_data)
@@ -253,10 +135,10 @@ ggplot(bit_et,aes(bit_et$Date,bit_et$Et.Open))+
 
 #Bitcoin vs Ethereum
 
-ggplot()+geom_line(data = bit_et,aes(Date, bit_et$`Open*`),color="green")+ 
+ggplot()+geom_line(data = bit_et,aes(Date, bit_et$`Open`),color="green")+ 
   geom_line(data = bit_et,aes(Date, bit_et$Et.Open),color="red")+ylab("Opening Price")+
   xlab("Year")+ggtitle("Bitcoin OP vs Ethereum OP")
-ggplot()+geom_line(data = bit_et,aes(Date, bit_et$`Close**`), color="green")+ 
+ggplot()+geom_line(data = bit_et,aes(Date, bit_et$`Close`), color="green")+ 
   geom_line(data = bit_et,aes(Date, bit_et$Et.Close),color="red")+ylab("Closing Price")+
   xlab("Year")+ggtitle("Bitcoin CP vs Ethereum CP")
 
@@ -281,12 +163,12 @@ train_bitcoin <- bitcoin_data[row.num,]
 test_bitcoin <- bitcoin_data[20:1,]
 
 #plot of train dataset
-ggplot(train_bitcoin, aes(train_bitcoin$Date, train_bitcoin$`Close**`)) +
+ggplot(train_bitcoin, aes(train_bitcoin$Date, train_bitcoin$`Close`)) +
   geom_line(color = 'blue') + scale_x_date("year")+ ylim(0,20000) + ylab("Closing Price") + 
   ggtitle('train_dataset')
 
 #plot of test dataset
-ggplot(test_bitcoin, aes(test_bitcoin$Date, test_bitcoin$`Close**`)) +
+ggplot(test_bitcoin, aes(test_bitcoin$Date, test_bitcoin$`Close`)) +
   geom_line(color = 'blue') + scale_x_date("year")+ ylim(3000,4000) + ylab("Closing Price") + 
   ggtitle('test_dataset')
 
