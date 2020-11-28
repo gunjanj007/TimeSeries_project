@@ -1,25 +1,4 @@
-source("bitcoinDatapreprocessing.R")
-
-
-#volume is consider one of the most important part for analysing trends in bitcoin market as it shows
-#volume of bitcoin transfered on a particular day.
-#this missing values can be filled by understanding patterns in data
-#using this data, we can use the difference between the highest and the lowest price of the day to fill
-#the missing values of the volume using the rest of the data set.
-
-
-#Difference between high and low on each day
-a <- matrix(c(0), nrow = 0, ncol = 1)
-for(i in 1:nrow(bitcoin_data)){
-  a <- rbind(a, bitcoin_data[i,3] - bitcoin_data[i,4])
-  i <- i + 1
-}
-bitcoin_data <- cbind(bitcoin_data,a)
-
-head(bitcoin_data)
-summary(bitcoin_data$a)
-boxplot(bitcoin_data$a)
-
+source("preprocessing.R")
 
 #Volume has missing values#
 #Data Manipulation#
@@ -48,7 +27,7 @@ summary(bitcoin_data)
 
 #writing data frame into csv file
 class(bitcoin_data)
-write.table(bitcoin_data,file =  "bitcoin.csv",sep = ',',row.names = F)
+#write.table(bitcoin_data,file =  "bitcoin.csv",sep = ',',row.names = F)
 
 
 #data cleaning is not required for ethereum as it doesnt have any NA values

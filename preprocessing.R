@@ -1,3 +1,32 @@
+library("TTR")
+library("ggplot2")
+library("dplyr")
+library("rvest")
+library("anytime")
+library("corrplot")
+library("coinmarketcapr")
+library("formatR")
+library("yaml")  
+library("googleVis")
+library("knitr")
+library("anytime")
+library("bsts")
+library("car")
+library("caret")
+library("forecast")
+library("keras")
+library("MCMCpack")
+library("smooth")
+library("tensorflow")
+library("tseries")
+
+#reading data
+bitcoin_data = read.csv('bitcoin.csv')
+ethereum_data = read.csv('ethereum.csv')
+
+head(ethereum_data)
+summary(ethereum_data)
+
 colnames(bitcoin_data) = c("Date","Open","High","Low","Close","Volume","Market Cap")
 colnames(ethereum_data) = c("Date","Open","High","Low","Close","Volume","Market Cap")
 
@@ -61,3 +90,15 @@ ethereum_data$Close <- as.numeric(ethereum_data$Close)
 
 #calculating total number of NA values in each column
 colSums(is.na(bitcoin_data))
+
+#Difference between high and low on each day
+a <- matrix(c(0), nrow = 0, ncol = 1)
+for(i in 1:nrow(bitcoin_data)){
+  a <- rbind(a, bitcoin_data[i,3] - bitcoin_data[i,4])
+  i <- i + 1
+}
+bitcoin_data <- cbind(bitcoin_data,a)
+
+head(bitcoin_data)
+summary(bitcoin_data$a)
+boxplot(bitcoin_data$a)
