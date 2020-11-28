@@ -1,4 +1,4 @@
-source("bitcoinDatapreprocessing.R")
+source("preprocessing.R")
 
 
 #volume is consider one of the most important part for analysing trends in bitcoin market as it shows
@@ -48,7 +48,7 @@ summary(bitcoin_data)
 
 #writing data frame into csv file
 class(bitcoin_data)
-write.table(bitcoin_data,file =  "bitcoin.csv",sep = ',',row.names = F)
+#write.table(bitcoin_data,file =  "bitcoin.csv",sep = ',',row.names = F)
 
 
 #data cleaning is not required for ethereum as it doesnt have any NA values
