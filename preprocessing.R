@@ -90,3 +90,15 @@ ethereum_data$Close <- as.numeric(ethereum_data$Close)
 
 #calculating total number of NA values in each column
 colSums(is.na(bitcoin_data))
+
+#Difference between high and low on each day
+a <- matrix(c(0), nrow = 0, ncol = 1)
+for(i in 1:nrow(bitcoin_data)){
+  a <- rbind(a, bitcoin_data[i,3] - bitcoin_data[i,4])
+  i <- i + 1
+}
+bitcoin_data <- cbind(bitcoin_data,a)
+
+head(bitcoin_data)
+summary(bitcoin_data$a)
+boxplot(bitcoin_data$a)
