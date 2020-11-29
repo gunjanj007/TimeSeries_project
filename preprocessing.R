@@ -99,6 +99,28 @@ for(i in 1:nrow(bitcoin_data)){
 }
 bitcoin_data <- cbind(bitcoin_data,a)
 
+fifty_avg <- round(mean(bitcoin_data$Volume[bitcoin_data$a < 50], na.rm = TRUE), digits = 2)
+hun_avg <- round(mean(bitcoin_data$Volume[bitcoin_data$a > 50 & bitcoin_data$a < 100], na.rm = TRUE), digits = 2)
+hf_avg <- round(mean(bitcoin_data$Volume[bitcoin_data$a > 100 & bitcoin_data$a < 150], na.rm = TRUE), digits = 2)
+th_avg <- round(mean(bitcoin_data$Volume[bitcoin_data$a > 150 & bitcoin_data$a < 350], na.rm = TRUE), digits = 2)
+
+for(i in 1:nrow(bitcoin_data)){
+  if(is.na(bitcoin_data[i,6])){
+    if(bitcoin_data$a[i] < 50){
+      bitcoin_data$Volume[i] <- fifty_avg
+    } else if(bitcoin_data$a[i] < 100){
+      bitcoin_data$Volume[i] <- hun_avg
+    } else if(bitcoin_data$a[i] < 150){
+      bitcoin_data$Volume[i] <- hf_avg
+    } else if(bitcoin_data$a[i] < 350){
+      bitcoin_data$Volume[i] <- th_avg
+    }else
+      print("Uncaught Title")
+  }
+}
+
+bitcoin_data <- bitcoin_data[,-8] #removing column 'a'
+
 head(bitcoin_data)
 summary(bitcoin_data$a)
 boxplot(bitcoin_data$a)
