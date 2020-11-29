@@ -160,7 +160,7 @@ dev.off()
 #plot of test dataset
 pdf('trace_test_Bitcoin.pdf')
 ggplot(test_bitcoin, aes(test_bitcoin$Date, test_bitcoin$`Close`)) +
-  geom_line(color = 'blue') + scale_x_date("year")+ ylim(3000,4000) + ylab("Closing Price") + 
+  geom_line(color = 'blue') + scale_x_date("year") + ylab("Closing Price") + 
   ggtitle('test_dataset Bitcoin')
 dev.off()
 
@@ -255,9 +255,11 @@ testdata <- test_bitcoin[1:10,5]
 accuracy(holt_df[,1], testdata) #accuracy
 
 pdf('Holt_bitcoin.pdf')
-ggplot() + geom_line(data = holtfdf, aes(Date, holtfdf[,5]), color = "blue") + ylab('Closing Price') +
-  geom_line(data = holtfdf, aes(Date, holtfdf[,8]), color = "Dark Red") + 
-  ggtitle('Predicted vs Actual for Holts Method') 
+ggplot() + geom_line(data = holtfdf, aes(Date, holtfdf[,5], color = "blue")) + ylab('Closing Price') +
+  geom_line(data = holtfdf, aes(Date, holtfdf[,8], color = "Dark Red")) + 
+  ggtitle('Predicted vs Actual for Holts Method') +
+  scale_color_discrete(name = "", labels = c("Actual", "Predicted")) 
+  
 dev.off()
 
 dim(train_ethereum)
@@ -275,9 +277,10 @@ testdata <- test_ethereum[1:10,5]
 accuracy(holt_df[,1], testdata) #accuracy
 
 pdf('Holt_ethereum.pdf')
-ggplot() + geom_line(data = holtfdf, aes(Date, holtfdf[,5]), color = "blue") + ylab('Closing Price') +
-  geom_line(data = holtfdf, aes(Date, holtfdf[,8]), color = "Dark Red") + 
-  ggtitle('Predicted vs Actual for Holts Method') 
+ggplot() + geom_line(data = holtfdf, aes(Date, holtfdf[,5],color = "blue")) + ylab('Closing Price') +
+  geom_line(data = holtfdf, aes(Date, holtfdf[,8], color = "Dark Red") ) + 
+  ggtitle('Predicted vs Actual for Holts Method') +
+  scale_color_discrete(name = "", labels = c("Actual", "Predicted"))
 dev.off()
 
 #The mean accurate prediction error comes out to be 1.47% which is very good as it is under 10%. 
@@ -311,9 +314,10 @@ accuracy(ETS_df[,1], testdata)
 etsfdf <- cbind(test_bitcoin[1:10,], ETS_df[,1])
 
 pdf('ETS_bitcoin.pdf')
-ggplot() + geom_line(data = etsfdf, aes(Date, etsfdf[,5]), color = "blue") + ylab('Closing Price') +
-  geom_line(data = etsfdf, aes(Date, etsfdf[,8]), color = "Dark Red") + 
-  ggtitle('Predicted vs Actual for ETS method') 
+ggplot() + geom_line(data = etsfdf, aes(Date, etsfdf[,5],color = "blue")) + ylab('Closing Price') +
+  geom_line(data = etsfdf, aes(Date, etsfdf[,8], color = "Dark Red") ) + 
+  ggtitle('Predicted vs Actual for ETS method') +
+  scale_color_discrete(name = "", labels = c("Actual", "Predicted"))
 dev.off()
 
 ETS <- ets((train_ethereum[,'Close']),allow.multiplicative.trend=TRUE)
@@ -332,9 +336,10 @@ accuracy(ETS_df[,1], testdata)
 etsfdf <- cbind(test_ethereum[1:10,], ETS_df[,1])
 
 pdf('ETS_ethereum.pdf')
-ggplot() + geom_line(data = etsfdf, aes(Date, etsfdf[,5]), color = "blue") + ylab('Closing Price') +
-  geom_line(data = etsfdf, aes(Date, etsfdf[,8]), color = "Dark Red") + 
-  ggtitle('Predicted vs Actual for ETS method') 
+ggplot() + geom_line(data = etsfdf, aes(Date, etsfdf[,5], color = "blue")) + ylab('Closing Price') +
+  geom_line(data = etsfdf, aes(Date, etsfdf[,8], color = "Dark Red")) + 
+  ggtitle('Predicted vs Actual for ETS method') +
+  scale_color_discrete(name = "", labels = c("Actual", "Predicted"))
 dev.off()
 #The mean accurate prediction error comes out to be 0.82% which has improved in accuracy, error rate is 
 #decreased by 0.7
@@ -421,9 +426,10 @@ accuracy(bts_f_df_auto[,1],testdata)
 
 pdf('auto_arima_bitcoin.pdf')
 gegefct_auto <- cbind(test_bitcoin[1:10,], bts_f_df_auto[,1])
-ggplot() + geom_line(data = gegefct_auto, aes(Date, gegefct_auto[,5]), color = "blue") + ylab('Closing Price') +
-  geom_line(data = gegefct_auto, aes(Date, gegefct_auto[,8]), color = "Dark Red") +  
-  ggtitle('Predicted vs Actual for Auto-ARIMA')
+ggplot() + geom_line(data = gegefct_auto, aes(Date, gegefct_auto[,5], color = "blue")) + ylab('Closing Price') +
+  geom_line(data = gegefct_auto, aes(Date, gegefct_auto[,8], color = "Dark Red")) +  
+  ggtitle('Predicted vs Actual for Auto-ARIMA') +
+  scale_color_discrete(name = "", labels = c("Actual", "Predicted"))
 dev.off()
 
 auto.arima(train_ethereum[,5])
@@ -438,9 +444,10 @@ accuracy(bts_f_df_auto[,1],testdata)
 
 pdf('auto_arima_ethereum.pdf')
 gegefct_auto <- cbind(test_ethereum[1:10,], bts_f_df_auto[,1])
-ggplot() + geom_line(data = gegefct_auto, aes(Date, gegefct_auto[,5]), color = "blue") + ylab('Closing Price') +
-  geom_line(data = gegefct_auto, aes(Date, gegefct_auto[,8]), color = "Dark Red") +  
-  ggtitle('Predicted vs Actual for Auto-ARIMA')
+ggplot() + geom_line(data = gegefct_auto, aes(Date, gegefct_auto[,5],color = "blue") ) + ylab('Closing Price') +
+  geom_line(data = gegefct_auto, aes(Date, gegefct_auto[,8], color = "Dark Red") ) +  
+  ggtitle('Predicted vs Actual for Auto-ARIMA') +
+  scale_color_discrete(name = "", labels = c("Actual", "Predicted"))
 dev.off()
 #The mean accurate prediction error comes out to be 1.50% for Auto ARIMA 
 
@@ -457,11 +464,15 @@ bts_f_df <- as.data.frame(bitcoin_time_series_forecast)
 testdata <- test_bitcoin[1:10,5]
 accuracy(bts_f_df[,1],testdata)
 
-pdf('arima_bitcoin.pdf')
+
 gegefct <- cbind(test_bitcoin[1:10,], bts_f_df[,1])
+
 plot(bitcoin_time_series_forecast,ylab = 'Closing Price', xlab = 'Number_of_Days', main='Forecast ARIMA (1,1,8)')
-ggplot() + geom_line(data = gegefct, aes(Date, gegefct[,5]), color = "blue") + ylab('Closing Price') +
-  geom_line(data = gegefct, aes(Date, gegefct[,8]), color = "Dark Red") +  ggtitle('Predicted vs Actual for ARIMA')
+pdf('arima_bitcoin.pdf')
+ggplot() + geom_line(data = gegefct, aes(Date, gegefct[,5], color = "blue")) + ylab('Closing Price') +
+  geom_line(data = gegefct, aes(Date, gegefct[,8], color = "Dark Red")) +  
+  ggtitle('Predicted vs Actual for ARIMA') +
+  scale_color_discrete(name = "", labels = c("Actual", "Predicted"))
 dev.off()
 
 ethereum_time_series_forecast <- forecast(arima(train_ethereum[,5], order = c(5,1,8)), h=10)
@@ -475,11 +486,14 @@ bts_f_df <- as.data.frame(ethereum_time_series_forecast)
 testdata <- test_ethereum[1:10,5]
 accuracy(bts_f_df[,1],testdata)
 
-pdf('arima_ethereum.pdf')
+
 gegefct <- cbind(test_ethereum[1:10,], bts_f_df[,1])
 plot(ethereum_time_series_forecast,ylab = 'Closing Price', xlab = 'Number_of_Days', main='Forecast ARIMA (1,1,8)')
-ggplot() + geom_line(data = gegefct, aes(Date, gegefct[,5]), color = "blue") + ylab('Closing Price') +
-  geom_line(data = gegefct, aes(Date, gegefct[,8]), color = "Dark Red") +  ggtitle('Predicted vs Actual for ARIMA')
+pdf('arima_ethereum.pdf')
+ggplot() + geom_line(data = gegefct, aes(Date, gegefct[,5], color = "blue")) + ylab('Closing Price') +
+  geom_line(data = gegefct, aes(Date, gegefct[,8], color = "Dark Red")) +  
+  ggtitle('Predicted vs Actual for ARIMA') +
+  scale_color_discrete(name = "", labels = c("Actual", "Predicted"))
 dev.off()
 
 #The mean accurate prediction error comes out to be 0.68% for ARIMA in which we set parameters
@@ -492,11 +506,12 @@ all <- cbind(test_bitcoin[1:10,],bts_f_df[,1],ETS_df[,1],holt_df[,1])
 head(all)
 
 pdf('all_bitcoin.pdf')
-ggplot() + geom_line(data = all, aes(Date, all[,5]), color = "blue") + ylab('Closing Price') +
-  geom_line(data = all, aes(Date, all[,8]), color = "green") +  
-  geom_line(data = all, aes(Date, all[,9]), color = "red") +  
-  geom_line(data = all, aes(Date, all[,10]), color = "orange") +  
-  ggtitle('Predicted vs Actual for all methods')
+ggplot() + geom_line(data = all, aes(Date, all[,5], color = "blue")) + ylab('Closing Price') +
+  geom_line(data = all, aes(Date, all[,8], color = "green")) +  
+  geom_line(data = all, aes(Date, all[,9], color = "red")) +  
+  geom_line(data = all, aes(Date, all[,10], color = "orange")) +  
+  ggtitle('Predicted vs Actual for all methods') +
+  scale_color_discrete(name = "", labels = c("True", "ARIMA", "ETS", "Holt"))
 dev.off()
 
 all <- cbind(test_ethereum[1:10,],bts_f_df[,1],ETS_df[,1],holt_df[,1])#, bts_f_df_auto[,1])
@@ -504,14 +519,12 @@ head(all)
 colors <- c("Actual" = "blue", "ARIMA" = "green", "ETS" = "red", "Holt's" = "orange")
 
 pdf('all_ethereum.pdf')
-ggplot() + geom_line(data = all, aes(Date, all[,5]), color = "blue") + ylab('Closing Price') +
-  geom_line(data = all, aes(Date, all[,8]), color = "green") +  
-  geom_line(data = all, aes(Date, all[,9]), color = "red") +  
-  geom_line(data = all, aes(Date, all[,10]), color = "orange") +  
-  #geom_line(data = all, aes(Date, all[,11]), color = "dark green") +  
+ggplot() + geom_line(data = all, aes(Date, all[,5], color = "blue")) + ylab('Closing Price') +
+  geom_line(data = all, aes(Date, all[,8], color = "green")) +  
+  geom_line(data = all, aes(Date, all[,9], color = "red")) +  
+  geom_line(data = all, aes(Date, all[,10], color = "orange")) +  
   ggtitle('Predicted vs Actual for all methods') +
-  scale_colour_manual(values=colors) +
-  theme(legend.position="right")
+  scale_color_discrete(name = "", labels = c("True", "ARIMA", "ETS", "Holt"))
 dev.off()
 
 #------------------------------------------
