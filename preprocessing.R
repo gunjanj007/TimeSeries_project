@@ -21,8 +21,8 @@ library("tensorflow")
 library("tseries")
 
 #reading data
-bitcoin_data = read.csv('bitcoin.csv')
-ethereum_data = read.csv('ethereum.csv')
+bitcoin_data = read.csv('bitcoin_updated.csv')
+ethereum_data = read.csv('ethereum_updated.csv')
 
 head(ethereum_data)
 summary(ethereum_data)
